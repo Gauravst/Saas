@@ -19,6 +19,13 @@ export const onAuthenticateUser = async () => {
             plan: true,
           },
         },
+        credit: {
+          select: {
+            totalCredits: true,
+            usedCredits: true,
+            allocationsType: true,
+          },
+        },
       },
     });
 
@@ -35,11 +42,21 @@ export const onAuthenticateUser = async () => {
         subscription: {
           create: {},
         },
+        credit: {
+          create: {},
+        },
       },
       include: {
         subscription: {
           select: {
             plan: true,
+          },
+        },
+        credit: {
+          select: {
+            totalCredits: true,
+            usedCredits: true,
+            allocationsType: true,
           },
         },
       },
