@@ -11,26 +11,17 @@ const CreateButton = (props: Props) => {
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
-  const handleConvert = (tweetUrl: string) => {
-    console.log(tweetUrl);
-    closePopup();
-  };
-
   return (
     <>
       <Button
         onClick={openPopup}
-        className="bg-[#9D9D9D] flex items-center gap-2"
+        className="h-8 w-8 sm:w-auto sm:h-9 flex items-center gap-2"
       >
         <PlusCircle />
-        <span className="flex items-center gap-2">Create</span>
+        <span className="hidden sm:flex items-center gap-2 ">Create</span>
       </Button>
 
-      <CreateDialog
-        isOpen={isPopupOpen}
-        onClose={closePopup}
-        onConvert={handleConvert}
-      />
+      <CreateDialog isOpen={isPopupOpen} onClose={closePopup} />
     </>
   );
 };
