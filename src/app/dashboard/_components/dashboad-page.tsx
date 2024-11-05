@@ -1,0 +1,114 @@
+'use client';
+import { useState } from 'react';
+import { Bolt } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import RecentConversions from '@/components/global/recent-conversions';
+
+type Props = {
+  subscription: {
+    plan: string;
+  };
+  credit: {
+    totalCredits: number;
+    usedCredits: number;
+    allocationsType: string;
+  };
+};
+
+const DashboardPage = ({ subscription, credit }: Props) => {
+  const totalCredits = credit.totalCredits;
+  const remainingCredits = credit.totalCredits - credit.usedCredits;
+  const usedCredits = credit.usedCredits;
+  const currentPlan = subscription.plan;
+  const nextPlan =
+    subscription.plan === 'FREE'
+      ? 'PRO'
+      : subscription.plan === 'PRO'
+        ? 'LIFETIME'
+        : '';
+
+  interface Conversion {
+    id: number;
+    title: string;
+    time: string;
+    html: string;
+  }
+
+  const [recentConversions, setRecentConversions] = useState<Conversion[]>([
+    {
+      id: 1,
+      title: 'Tweet about AI',
+      time: '2 hours ago',
+      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+    },
+    {
+      id: 2,
+      title: 'Announcement Tweet',
+      time: '5 hours ago',
+      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+    },
+    {
+      id: 3,
+      title: 'Product Launch',
+      time: '1 day ago',
+      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+    },
+  ]);
+
+  return (
+    <div className="overflow-hidden">
+      <div className="grid gap-5 md:grid-cols-2">
+        {/* Credit Bar */}
+        <Card className="bg-transparent border-2">
+          <CardHeader>
+            <CardTitle>Credits Remaining</CardTitle>
+            <CardDescription>
+              You have used {usedCredits} out of {totalCredits} credits
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Progress value={(usedCredits / totalCredits) * 100} />
+              <div className="text-sm text-muted-foreground text-right">
+                {remainingCredits} credits left
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Plan Information */}
+        <Card className="bg-transparent border-2">
+          <CardHeader>
+            <CardTitle>Current Plan : {currentPlan}</CardTitle>
+            <CardDescription>
+              Upgrade to {nextPlan} for more features
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Bolt className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium">View Details</span>
+              </div>
+              <Button variant="outline" className="bg-transparent">
+                Upgrade
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <RecentConversions recentConversions={recentConversions} />
+    </div>
+  );
+};
+
+export default DashboardPage;

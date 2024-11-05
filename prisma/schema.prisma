@@ -18,12 +18,14 @@ model User {
   notification Notification[]
   files        File[]
   subscription Subscription?
+  credit       Credit?
 }
 
 model File {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  tweetUrl    String
   htmlContent String   @db.Text
-  cssContent  String   @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id])
@@ -36,10 +38,20 @@ model Subscription {
   userId          String?           @unique @db.Uuid
   createdAt       DateTime          @default(now())
   plan            SUBSCRIPTION_PLAN @default(FREE)
-  generationCount Int               @default(5)
   generationMonth DateTime?         @default(now())
-  updatedAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   customerId      String?           @unique
+}
+
+model Credit {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  User            User?            @relation(fields: [userId], references: [id])
+  userId          String?          @unique @db.Uuid
+  totalCredits    Int              @default(5)
+  usedCredits     Int              @default(0)
+  allocationsType ALLOCATIONS_TYPE @default(LIFETIME)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Notification {
@@ -52,4 +64,10 @@ model Notification {
 enum SUBSCRIPTION_PLAN {
   PRO
   FREE
+}
+
+enum ALLOCATIONS_TYPE {
+  MONTH
+  YEAR
+  LIFETIME
 }
