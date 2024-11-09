@@ -6,7 +6,7 @@ export const onAuthenticateUser = async () => {
   try {
     const user = await currentUser();
     if (!user) {
-      return { status: 403 };
+      return { status: 403, data: 'User not authenticated' };
     }
 
     const userExist = await client.user.findUnique({
@@ -30,7 +30,7 @@ export const onAuthenticateUser = async () => {
     });
 
     if (userExist) {
-      return { status: 200, user: userExist };
+      return { status: 200, data: userExist };
     }
 
     const newUser = await client.user.create({
@@ -63,12 +63,12 @@ export const onAuthenticateUser = async () => {
     });
 
     if (newUser) {
-      return { status: 201, user: newUser };
+      return { status: 201, data: newUser };
     }
 
     return { status: 400 };
   } catch (error) {
-    console.log('ERROR', error);
-    return { status: 500 };
+    console.log(error);
+    return { status: 500, data: 'Internal server error' };
   }
 };

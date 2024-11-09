@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import RecentConversions from '@/components/global/recent-conversions';
+import { useQueryData } from '@/hooks/useQueryData';
+import { getFiles } from '@/actions/file';
+import { RecentConversionsProps } from '@/types/index.type';
 
 type Props = {
   subscription: {
@@ -35,33 +38,40 @@ const DashboardPage = ({ subscription, credit }: Props) => {
         ? 'LIFETIME'
         : '';
 
-  interface Conversion {
-    id: number;
-    title: string;
-    time: string;
-    html: string;
-  }
 
-  const [recentConversions, setRecentConversions] = useState<Conversion[]>([
-    {
-      id: 1,
-      title: 'Tweet about AI',
-      time: '2 hours ago',
-      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
-    },
-    {
-      id: 2,
-      title: 'Announcement Tweet',
-      time: '5 hours ago',
-      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
-    },
-    {
-      id: 3,
-      title: 'Product Launch',
-      time: '1 day ago',
-      html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
-    },
-  ]);
+  const { data } = useQueryData(
+    ['recentConversions'],
+    getFiles({ page: 1, pageSize: 6 })
+  );
+  const recentConversions = data?.data as RecentConversionsProps[];
+
+  // interface Conversion {
+  //   id: number;
+  //   title: string;
+  //   time: string;
+  //   html: string;
+  // }
+
+  // const [recentConversions, setRecentConversions] = useState<Conversion[]>([
+  //   {
+  //     id: 1,
+  //     title: 'Tweet about AI',
+  //     time: '2 hours ago',
+  //     html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Announcement Tweet',
+  //     time: '5 hours ago',
+  //     html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Product Launch',
+  //     time: '1 day ago',
+  //     html: "<div style='width: 100%; height : 100%; border-radius : 10px 10px 0px 0px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>",
+  //   },
+  // ]);
 
   return (
     <div className="overflow-hidden">

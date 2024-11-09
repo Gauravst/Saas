@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String         @unique
-  firstname    String?
-  lastname     String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  clerkid      String         @unique
-  notification Notification[]
-  files        File[]
-  subscription Subscription?
-  credit       Credit?
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String         @unique
+  firstname     String?
+  lastname      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  clerkid       String         @unique
+  role          USER_ROLE      @default(USER)
+  notifications Notification[]
+  files         File[]
+  subscription  Subscription?
+  credit        Credit?
 }
 
 model File {
@@ -70,4 +71,9 @@ enum ALLOCATIONS_TYPE {
   MONTH
   YEAR
   LIFETIME
+}
+
+enum USER_ROLE {
+  USER
+  ADMIN
 }

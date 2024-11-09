@@ -10,34 +10,41 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-interface Conversion {
-  id: number;
-  title: string;
-  time: string;
-  html: string;
-}
+import { redirect } from 'next/navigation';
+import { RecentConversionsProps } from '@/types/index.type';
+import TimeAgo from '../time-ago';
 
 type Props = {
-  conversion: Conversion;
+  conversion: RecentConversionsProps;
 };
 
 const ImageCard = ({ conversion }: Props) => {
   const handleDelete = (id: number) => {
     console.log('deleted', id);
   };
+
+  const handleCardClick = () => {
+    return redirect(`/dashboard/edit/${conversion.id}`);
+  };
+
   return (
-    <Card key={conversion.id} className="w-full bg-transparent">
+    <Card
+      onClick={handleCardClick}
+      key={conversion.id}
+      className="hover:cursor-pointer w-full bg-transparent"
+    >
       <CardContent className="p-0">
         <div
           className="aspect-video w-full"
-          dangerouslySetInnerHTML={{ __html: conversion.html }}
+          dangerouslySetInnerHTML={{ __html: conversion.htmlContent }}
         />
-        <div className="p-4">
+        <div className="p-4 hover:cursor-default">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium">{conversion.title}</h3>
-              <p className="text-xs text-muted-foreground">{conversion.time}</p>
+              <h3 className="text-sm font-medium hover:underline hover:cursor-pointer">
+                {conversion.title}
+              </h3>
+              <TimeAgo time={conversion.updatedAt} />
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
