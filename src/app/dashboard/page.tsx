@@ -1,13 +1,6 @@
 import { onAuthenticateUser } from '@/actions/user';
-// import { getNotifications } from '@/actions/notification';
-
 import { redirect } from 'next/navigation';
 import DashboardPage from './_components/dashboad-page';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
 
 const Dashboard = async () => {
   const auth = await onAuthenticateUser();
@@ -16,22 +9,12 @@ const Dashboard = async () => {
     return redirect('/auth/sign-in');
   }
 
-  const query = new QueryClient();
-
-  // await query.prefetchQuery({
-  //   queryKey: ['notifications'],
-  //   queryFn: () => getNotifications(),
-  // });
+  const user = auth.data;
 
   return (
-    <HydrationBoundary state={dehydrate(query)}>
-      <div>
-        <DashboardPage
-          subscription={auth.user.subscription}
-          credit={auth.user.credit}
-        />
-      </div>
-    </HydrationBoundary>
+    <>
+      <DashboardPage subscription={user?.subscription} credit={user?.credit} />
+    </>
   );
 };
 

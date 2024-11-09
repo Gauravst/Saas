@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -76,7 +75,11 @@ export default function CreateDialog({
               className="w-full mt-1"
               required
             />
-            {error && <p className="ml-1 text-red-500 text-sm mt-1">{error}</p>}{' '}
+            {
+              <p className="ml-1 text-red-500 text-sm mt-1">
+                {error ? error : <span>&nbsp;</span>}
+              </p>
+            }
           </div>
         </div>
         <DialogFooter>

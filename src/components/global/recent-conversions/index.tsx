@@ -9,16 +9,10 @@ import {
 } from '@/components/ui/card';
 
 import ImageCard from '../image-card';
-
-interface Conversion {
-  id: number;
-  title: string;
-  time: string;
-  html: string;
-}
+import { RecentConversionsProps } from '@/types/index.type';
 
 type Props = {
-  recentConversions: Conversion[];
+  recentConversions: RecentConversionsProps[];
 };
 
 const RecentConversions = ({ recentConversions }: Props) => {
@@ -31,11 +25,17 @@ const RecentConversions = ({ recentConversions }: Props) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {recentConversions.map((conversion) => (
-            <ImageCard key={conversion.id} conversion={conversion} />
-          ))}
-        </div>
+        {!recentConversions || recentConversions.length === 0 ? (
+          <div className="flex items-center justify-center p-6 text-gray-500">
+            <p>No images found</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {recentConversions.map((conversion) => (
+              <ImageCard key={conversion.id} conversion={conversion} />
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
