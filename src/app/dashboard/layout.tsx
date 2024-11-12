@@ -20,12 +20,12 @@ const Layout = async ({ children }: Props) => {
 
   await query.prefetchQuery({
     queryKey: ['notifications'],
-    queryFn: () => getNotifications(),
+    queryFn: () => getNotifications({ page: 1, pageSize: 6 }),
   });
 
   await query.prefetchQuery({
     queryKey: ['recentConversions'],
-    queryFn: () => getFiles({ page : 1, pageSize : 6}),
+    queryFn: () => getFiles({ page: 1, pageSize: 6 }),
   });
 
   return (

@@ -9,11 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import RecentConversions from '@/components/global/recent-conversions';
 import { useQueryData } from '@/hooks/useQueryData';
 import { getFiles } from '@/actions/file';
 import { RecentConversionsProps } from '@/types/index.type';
+import CreditUsageCard from '@/components/global/credit-usage-card';
 
 type Props = {
   subscription: {
@@ -30,6 +30,7 @@ const DashboardPage = ({ subscription, credit }: Props) => {
   const totalCredits = credit.totalCredits;
   const remainingCredits = credit.totalCredits - credit.usedCredits;
   const usedCredits = credit.usedCredits;
+  const allocationsType = credit.allocationsType;
   const currentPlan = subscription.plan;
   const nextPlan =
     subscription.plan === 'FREE'
@@ -37,7 +38,6 @@ const DashboardPage = ({ subscription, credit }: Props) => {
       : subscription.plan === 'PRO'
         ? 'LIFETIME'
         : '';
-
 
   const { data } = useQueryData(
     ['recentConversions'],
@@ -77,22 +77,13 @@ const DashboardPage = ({ subscription, credit }: Props) => {
     <div className="overflow-hidden">
       <div className="grid gap-5 md:grid-cols-2">
         {/* Credit Bar */}
-        <Card className="bg-transparent border-2">
-          <CardHeader>
-            <CardTitle>Credits Remaining</CardTitle>
-            <CardDescription>
-              You have used {usedCredits} out of {totalCredits} credits
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Progress value={(usedCredits / totalCredits) * 100} />
-              <div className="text-sm text-muted-foreground text-right">
-                {remainingCredits} credits left
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <CreditUsageCard
+          totalCredits={totalCredits}
+          usedCredits={usedCredits}
+          remainingCredits={remainingCredits}
+          allocationsType={allocationsType}
+          title={'Credits Remaining'}
+        />
 
         {/* Plan Information */}
         <Card className="bg-transparent border-2">

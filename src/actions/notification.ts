@@ -2,6 +2,11 @@
 import { client } from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 
+type Props = {
+  page?: number;
+  pageSize?: number;
+};
+
 export const createNotification = async (content: string) => {
   try {
     const user = await currentUser();
@@ -31,7 +36,7 @@ export const createNotification = async (content: string) => {
   }
 };
 
-export const getNotifications = async () => {
+export const getNotifications = async ({ page, pageSize }: Props) => {
   try {
     const user = await currentUser();
     if (!user) {
@@ -41,7 +46,13 @@ export const getNotifications = async () => {
     const data = await client.user.findUnique({
       where: { clerkid: user.id },
       select: {
-        notifications: true,
+        notifications: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        },
       },
     });
 
