@@ -39,8 +39,7 @@ const DashboardPage = ({ subscription, credit }: Props) => {
         ? 'LIFETIME'
         : '';
 
-  const { data } = useQueryData(
-    ['recentConversions'],
+  const { data } = useQueryData(['recentConversions', 1, 6], async () =>
     getFiles({ page: 1, pageSize: 6 })
   );
   const recentConversions = data?.data as RecentConversionsProps[];

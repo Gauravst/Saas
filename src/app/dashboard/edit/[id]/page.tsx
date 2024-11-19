@@ -1,20 +1,28 @@
-// src/app/dashboard/edit/[id]/page.tsx
+import { getOneFile } from '@/actions/file';
+import { FileProps } from '@/types/index.type';
+import EditPage from '../_components/edit-page';
+import { redirect } from 'next/navigation';
 
 type Props = {
   params: {
-    id?: string; // Marking id as optional in case it's not available initially
+    id: string;
   };
 };
 
 const Page = async ({ params }: Props) => {
-  // Check if `params` is fully resolved
-  const id = params?.id;
+  const { id } = await params;
+  const response = await getOneFile(id);
+  const data = response.data as FileProps;
 
-  if (id) {
-    return <div>id - {id}</div>;
-  } else {
-    return <div>No ID found</div>;
+  if (response.status !== 200) {
+    return redirect('/dashboard');
   }
+
+  return (
+    <>
+      <EditPage data={data} />
+    </>
+  );
 };
 
 export default Page;

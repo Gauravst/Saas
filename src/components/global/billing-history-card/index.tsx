@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BillingsProps } from '@/types/index.type';
-import { HumanReadableDate } from '@/lib/humanReadableDate';
+import { HumanReadableDate } from '@/lib/human-readable-date';
 
 type Props = {
   billings: BillingsProps[];

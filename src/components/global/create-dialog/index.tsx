@@ -44,6 +44,7 @@ export default function CreateDialog({
     setError('');
     setLoading(true);
     const newFile = await createFile({ tweetUrl });
+    console.log(newFile);
     if (newFile.status !== 201 || !newFile.data) {
       await handleCancel();
       return;

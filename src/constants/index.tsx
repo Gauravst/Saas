@@ -59,3 +59,44 @@ export const PLANS = [
     ],
   },
 ];
+
+export const COLOR = [
+  { color: '#fef3c7' },
+  {
+    color: 'linear-gradient(to right, #4f46e5, #7c3aed)',
+  },
+  { color: '#3357ff' },
+  {
+    color: 'linear-gradient(to right, #ff7eb3, #ff758c)',
+  },
+  {
+    color: 'linear-gradient(to right, #ff9a9e, #fad0c4)',
+  },
+  {
+    color: 'linear-gradient(to right, #00c6ff, #0072ff)',
+  },
+  {
+    color: 'linear-gradient(to right, #ffafbd, #ffc3a0)',
+  },
+  { color: '#ffeb3b' },
+  {
+    color: 'linear-gradient(to right, #00b09b, #96c93d)',
+  },
+  { color: '#8e44ad' },
+  {
+    color: 'linear-gradient(to right, #ff512f, #dd2476)',
+  },
+  { color: '#1abc9c' },
+  {
+    color: 'linear-gradient(to right, #2c3e50, #4ca1af)',
+  },
+  {
+    color: 'linear-gradient(to right, #fc466b, #3f5efb)',
+  },
+];
+
+export const BG_HTML_DEFAULT_CSS =
+  'aspect-video w-full rounded flex justify-center items-center';
+
+export const DEMO_HTML =
+  "<div style='width: 100%; height : 100%; border-radius : 10px 10px 10px 10px; background: linear-gradient(45deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;'><p style='text-align: center;'>Your tweet content here</p></div>";

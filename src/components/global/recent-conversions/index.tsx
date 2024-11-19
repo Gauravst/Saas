@@ -31,7 +31,7 @@ const RecentConversions = ({ recentConversions }: Props) => {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {recentConversions.map((conversion) => (
+            {recentConversions && recentConversions?.map((conversion) => (
               <ImageCard key={conversion.id} conversion={conversion} />
             ))}
           </div>

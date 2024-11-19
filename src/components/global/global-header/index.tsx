@@ -7,6 +7,15 @@ const GlobalHeader = () => {
   const pathName = usePathname().split('/dashboard/')[1];
   const path = usePathname();
 
+  if (pathName && pathName.search('edit') !== -1) {
+    return (
+      <article className="flex flex-col gap-2">
+        <span className="text-[#707070] text-sm">/dashboard/edit</span>
+        <h1 className="text-4xl font-bold mb-4">Edit</h1>
+      </article>
+    );
+  }
+
   return (
     <article className="flex flex-col gap-2">
       <span className="text-[#707070] text-sm">{path}</span>

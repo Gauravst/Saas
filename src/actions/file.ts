@@ -1,5 +1,6 @@
 'use server';
 import { client } from '@/lib/prisma';
+import twitterClient from '@/lib/twitter-api';
 import { currentUser } from '@clerk/nextjs/server';
 
 type Props = {
@@ -8,12 +9,28 @@ type Props = {
   pageSize?: number;
 };
 
+const getTweetIdFromUrl = (url: string): string | null => {
+  const regex = /x\.com\/(?:\w+)\/status\/(\d+)/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+const removeUrlsFromText = (text: string): string => {
+  return text.replace(/https?:\/\/t\.co\/\S+/g, '');
+};
+
 const getTweetData = async (url: string) => {
-  // work going on
-  return {
-    fileTitle: 'temp title',
-    fileHtml: '<h1>temp htmp</h1>',
-  };
+  const tweetId = getTweetIdFromUrl(url);
+  if (!tweetId) {
+    return false;
+  }
+  const tweet = await twitterClient.v2.singleTweet(tweetId, {
+    expansions: ['author_id', 'attachments.media_keys'],
+    'tweet.fields': ['created_at', 'public_metrics', 'attachments'],
+    'user.fields': ['profile_image_url', 'username', 'name'],
+    'media.fields': ['url', 'type', 'preview_image_url'],
+  });
+  return tweet;
 };
 
 export const createFile = async ({ tweetUrl }: Props) => {
@@ -57,13 +74,40 @@ export const createFile = async ({ tweetUrl }: Props) => {
       return { status: 403, data: 'Insufficient credits to create a file' };
     }
 
-    const { fileTitle, fileHtml } = await getTweetData(tweetUrl);
+    const tweetData = await getTweetData(tweetUrl);
+    if (!tweetData) {
+      return { status: 404, data: 'Invalid URL' };
+    }
+
+    const author = tweetData.includes?.users?.find(
+      (user) => user.id === tweetData.data.author_id
+    );
 
     const newFile = await client.file.create({
       data: {
-        title: fileTitle,
+        text: removeUrlsFromText(tweetData.data.text),
+        tweeetId: tweetData.data.id,
         tweetUrl: tweetUrl,
-        htmlContent: fileHtml,
+        likeCount: tweetData.data.public_metrics?.like_count ?? 0,
+        bookmarkCount: tweetData.data.public_metrics?.bookmark_count ?? 0,
+        impressionCount: tweetData.data.public_metrics?.impression_count ?? 0,
+        quoteCount: tweetData.data.public_metrics?.quote_count ?? 0,
+        retweetCount: tweetData.data.public_metrics?.retweet_count ?? 0,
+        replyCount: tweetData.data.public_metrics?.reply_count ?? 0,
+        authorId: author?.id ?? '',
+        authorName: author?.name ?? '',
+        authorUsername: author?.username ?? '',
+        authorPic: author?.profile_image_url ?? '',
+        authorVerified: author?.verified ?? false,
+        tweetCreatedDate: new Date(tweetData.data.created_at),
+        tweetMedia: {
+          create:
+            tweetData.includes?.media?.map((media) => ({
+              mediaKey: media?.media_key,
+              type: media?.type?.toUpperCase(),
+              url: media?.url,
+            })) ?? [],
+        },
         userId: authorized.id,
       },
     });
@@ -156,7 +200,7 @@ export const getOneFile = async (id: string) => {
       return { status: 401, data: 'User not authorized' };
     }
 
-    return { status: 200, data: data.files };
+    return { status: 200, data: data.files[0] };
   } catch (error) {
     console.log(error);
     return { status: 500, data: 'Internal server error' };

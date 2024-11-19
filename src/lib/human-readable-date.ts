@@ -16,3 +16,10 @@ export const HumanReadableDate = ({ date }: Props) => {
   const formattedDate = `${day}, ${month} ${year}`;
   return formattedDate;
 };
+
+export const FormatTweetDate = (date: Date): string => {
+  if (!date || !(date instanceof Date)) {
+    return 'Invalid date';
+  }
+  return date.toLocaleString();
+};

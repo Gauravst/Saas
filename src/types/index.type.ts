@@ -35,6 +35,53 @@ export type BillingsProps = {
   updatedAt: Date;
 };
 
+export type FileProps = {
+  id: string;
+  text: string;
+  tweeetId: string;
+  tweetUrl: string;
+  likeCount: number;
+  bookmarkCount: number;
+  impressionCount: number;
+  quoteCount: number;
+  retweetCount: number;
+  replyCount: number;
+  authorId: string;
+  authorName: string;
+  authorUsername: string;
+  authorPic: string;
+  authorVerified: boolean;
+  tweetCreatedDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  tweetMedia: TweetMediaProps[];
+  preferences: FilePreferencesProps;
+};
+
+export type FilePreferencesProps = {
+  id: string;
+  theme: string;
+  fgPadding: number;
+  bgPadding: number;
+  fgRadius: string;
+  bgRadius: string;
+  bgBackground: number;
+  fgBackground: number;
+  fgShadow: string;
+  fgTransparency: number;
+  hideDate: boolean;
+  hideMetrics: boolean;
+  hideLogo: boolean;
+};
+
+export type TweetMediaProps = {
+  id: string;
+  mediaKey: string;
+  url: string;
+  type: string;
+};
+
 export type RecentConversionsProps = {
   id: string;
   title: string;
