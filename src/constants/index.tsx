@@ -61,37 +61,80 @@ export const PLANS = [
 ];
 
 export const COLOR = [
-  { color: '#fef3c7' },
   {
+    key: 'no-background',
+    color: '#000000',
+    name: 'No background',
+  },
+  {
+    key: 'soft-yellow',
+    color: '#fef3c7',
+    name: 'Soft Yellow',
+  },
+  {
+    key: 'purple-gradient',
     color: 'linear-gradient(to right, #4f46e5, #7c3aed)',
+    name: 'Purple Gradient',
   },
-  { color: '#3357ff' },
   {
+    key: 'bright-blue',
+    color: '#3357ff',
+    name: 'Bright Blue',
+  },
+  {
+    key: 'pink-gradient',
     color: 'linear-gradient(to right, #ff7eb3, #ff758c)',
+    name: 'Pink Gradient',
   },
   {
+    key: 'peach-gradient',
     color: 'linear-gradient(to right, #ff9a9e, #fad0c4)',
+    name: 'Peach Gradient',
   },
   {
+    key: 'blue-ocean-gradient',
     color: 'linear-gradient(to right, #00c6ff, #0072ff)',
+    name: 'Blue Ocean Gradient',
   },
   {
+    key: 'blush-gradient',
     color: 'linear-gradient(to right, #ffafbd, #ffc3a0)',
+    name: 'Blush Gradient',
   },
-  { color: '#ffeb3b' },
   {
+    key: 'bright-yellow',
+    color: '#ffeb3b',
+    name: 'Bright Yellow',
+  },
+  {
+    key: 'green-lime-gradient',
     color: 'linear-gradient(to right, #00b09b, #96c93d)',
+    name: 'Green Lime Gradient',
   },
-  { color: '#8e44ad' },
   {
+    key: 'royal-purple',
+    color: '#8e44ad',
+    name: 'Royal Purple',
+  },
+  {
+    key: 'red-sunset-gradient',
     color: 'linear-gradient(to right, #ff512f, #dd2476)',
+    name: 'Red Sunset Gradient',
   },
-  { color: '#1abc9c' },
   {
+    key: 'turquoise-green',
+    color: '#1abc9c',
+    name: 'Turquoise Green',
+  },
+  {
+    key: 'steel-blue-gradient',
     color: 'linear-gradient(to right, #2c3e50, #4ca1af)',
+    name: 'Steel Blue Gradient',
   },
   {
+    key: 'magenta-blue-gradient',
     color: 'linear-gradient(to right, #fc466b, #3f5efb)',
+    name: 'Magenta Blue Gradient',
   },
 ];
 

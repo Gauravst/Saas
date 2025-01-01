@@ -5,8 +5,7 @@ import { getFiles } from '@/actions/file';
 import { RecentConversionsProps } from '@/types/index.type';
 
 const page = () => {
-  const { data } = useQueryData(
-    ['recentConversions'],
+  const { data } = useQueryData(['recentConversions', 1, 6], () =>
     getFiles({ page: 1, pageSize: 6 })
   );
   const recentConversions = data?.data as RecentConversionsProps[];

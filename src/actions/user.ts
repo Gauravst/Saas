@@ -45,6 +45,9 @@ export const onAuthenticateUser = async () => {
         credit: {
           create: {},
         },
+        setting: {
+          create: {},
+        },
       },
       include: {
         subscription: {

@@ -21,6 +21,18 @@ model User {
   subscription  Subscription?
   credit        Credit?
   billings      Billing[]
+  setting       Setting?
+}
+
+model Setting {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  User                User?    @relation(fields: [userId], references: [id])
+  userId              String?  @unique @db.Uuid
+  notificationsEmails Boolean  @default(true)
+  autoSave            Boolean  @default(true)
+  language            String   @default("English")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model File {
@@ -58,21 +70,32 @@ model TweetMedia {
 }
 
 model FilePreferences {
-  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  theme          TWEET_THEME @default(DARK)
-  fgPadding      Int         @default(4)
-  bgPadding      Int         @default(2)
-  fgRadius       String      @default("sm")
-  bgRadius       String      @default("sm")
-  bgBackground   Int         @default(9)
-  fgBackground   Int         @default(9)
-  fgShadow       String      @default("lg")
-  fgTransparency Int         @default(100)
-  hideDate       Boolean     @default(false)
-  hideMetrics    Boolean     @default(false)
-  hideLogo       Boolean     @default(false)
-  file           File?       @relation(fields: [fileId], references: [id])
-  fileId         String?     @unique @db.Uuid
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  theme          TWEET_THEME     @default(DARK)
+  fgPadding      Int             @default(4)
+  bgPadding      Int             @default(2)
+  fgRadius       String          @default("sm")
+  bgRadius       String          @default("sm")
+  bgBackground   FileBackground? @relation("BgBackground")
+  fgBackground   FileBackground? @relation("FgBackground")
+  fgShadow       String          @default("lg")
+  fgTransparency Int             @default(100)
+  hideDate       Boolean         @default(false)
+  hideMetrics    Boolean         @default(false)
+  hideLogo       Boolean         @default(false)
+  file           File?           @relation(fields: [fileId], references: [id])
+  fileId         String?         @unique @db.Uuid
+}
+
+model FileBackground {
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key                 String?          @default("no-background")
+  image               Boolean?         @default(false)
+  url                 String?          @default("null")
+  FilePreferencesBg   FilePreferences? @relation("BgBackground", fields: [FilePreferencesBgId], references: [id])
+  FilePreferencesFg   FilePreferences? @relation("FgBackground", fields: [FilePreferencesFgId], references: [id])
+  FilePreferencesBgId String?          @unique @db.Uuid
+  FilePreferencesFgId String?          @unique @db.Uuid
 }
 
 model Subscription {

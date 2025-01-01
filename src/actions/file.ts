@@ -83,6 +83,7 @@ export const createFile = async ({ tweetUrl }: Props) => {
       (user) => user.id === tweetData.data.author_id
     );
 
+    const tweetCreatedDate = new Date(tweetData?.data?.created_at);
     const newFile = await client.file.create({
       data: {
         text: removeUrlsFromText(tweetData.data.text),
@@ -99,7 +100,7 @@ export const createFile = async ({ tweetUrl }: Props) => {
         authorUsername: author?.username ?? '',
         authorPic: author?.profile_image_url ?? '',
         authorVerified: author?.verified ?? false,
-        tweetCreatedDate: new Date(tweetData.data.created_at),
+        tweetCreatedDate: tweetCreatedDate,
         tweetMedia: {
           create:
             tweetData.includes?.media?.map((media) => ({
@@ -109,6 +110,16 @@ export const createFile = async ({ tweetUrl }: Props) => {
             })) ?? [],
         },
         userId: authorized.id,
+        preferences: {
+          create: {
+            bgBackground: {
+              create: {},
+            },
+            fgBackground: {
+              create: {},
+            },
+          },
+        },
       },
     });
 
@@ -185,14 +196,22 @@ export const getOneFile = async (id: string) => {
     const data = await client.user.findUnique({
       where: {
         clerkid: user.id,
+      },
+      include: {
         files: {
-          some: {
+          where: {
             id: id,
           },
+          include: {
+            preferences: {
+              include: {
+                fgBackground: true,
+                bgBackground: true,
+              },
+            },
+            tweetMedia: true,
+          },
         },
-      },
-      select: {
-        files: true,
       },
     });
 
@@ -201,6 +220,117 @@ export const getOneFile = async (id: string) => {
     }
 
     return { status: 200, data: data.files[0] };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, data: 'Internal server error' };
+  }
+};
+
+export const syncFileWithTweet = async (id: string) => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { status: 403, data: 'User not authenticated' };
+    }
+
+    const fileData = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      include: {
+        files: {
+          where: {
+            id: id,
+          },
+        },
+      },
+    });
+
+    if (fileData?.files && fileData?.files.length < 1) {
+      return { status: 404, data: 'Tweet not found' };
+    }
+    const fileMainData = fileData?.files[0]!;
+
+    const tweetData = await getTweetData(fileMainData?.tweetUrl);
+    if (!tweetData) {
+      return { status: 404, data: 'Tweet might be deleted' };
+    }
+
+    const metrics = tweetData?.data?.public_metrics;
+    const author = tweetData.includes?.users?.find(
+      (user) => user.id === tweetData.data.author_id
+    );
+
+    const data = await client.file.update({
+      where: { id: fileMainData.id },
+      data: {
+        likeCount: metrics?.like_count ?? fileMainData.likeCount,
+        bookmarkCount: metrics?.bookmark_count ?? fileMainData.bookmarkCount,
+        impressionCount:
+          metrics?.impression_count ?? fileMainData.impressionCount,
+        quoteCount: metrics?.quote_count ?? fileMainData.quoteCount,
+        retweetCount: metrics?.retweet_count ?? fileMainData.retweetCount,
+        replyCount: metrics?.reply_count ?? fileMainData.replyCount,
+        authorId: author?.id ?? fileMainData.authorId,
+        authorName: author?.name ?? fileMainData.authorName,
+        authorUsername: author?.username ?? fileMainData.authorUsername,
+        authorPic: author?.profile_image_url ?? fileMainData.authorPic,
+        authorVerified: author?.verified ?? fileMainData.authorVerified,
+      },
+    });
+
+    if (!data) {
+      return { status: 500, data: 'Something went wrong' };
+    }
+
+    return { status: 200, data: data };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, data: 'Internal server error' };
+  }
+};
+
+export const updatePreferences = async (id: string, data) => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { status: 403, data: 'User not authenticated' };
+    }
+
+    const fileData = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      include: {
+        files: {
+          where: {
+            id: id,
+          },
+        },
+      },
+    });
+
+    if (fileData?.files && fileData?.files.length < 1) {
+      return { status: 404, data: 'Tweet not found' };
+    }
+    const fileMainData = fileData?.files[0]!;
+
+    const updatedFile = client.file.update({
+      where: { id: fileMainData.id },
+      data: {
+        preferences: {
+          update: data,
+        },
+      },
+    });
+
+    if (!updatedFile) {
+      return { status: 500, data: 'Something went worng' };
+    }
+
+    return { status: 200, data: updatedFile };
   } catch (error) {
     console.log(error);
     return { status: 500, data: 'Internal server error' };

@@ -66,13 +66,21 @@ export type FilePreferencesProps = {
   bgPadding: number;
   fgRadius: string;
   bgRadius: string;
-  bgBackground: number;
-  fgBackground: number;
+  bgBackground: FileBackgroundProps;
+  fgBackground: FileBackgroundProps;
   fgShadow: string;
   fgTransparency: number;
   hideDate: boolean;
   hideMetrics: boolean;
   hideLogo: boolean;
+};
+
+export type FileBackgroundProps = {
+  id: string;
+  key: string;
+  image: Boolean;
+  url: String;
+  color: String;
 };
 
 export type TweetMediaProps = {

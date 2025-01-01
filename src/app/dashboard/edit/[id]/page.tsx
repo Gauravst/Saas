@@ -19,9 +19,9 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <>
+    <div className="overflow-y-hidden">
       <EditPage data={data} />
-    </>
+    </div>
   );
 };
 
