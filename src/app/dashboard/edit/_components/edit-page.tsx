@@ -173,10 +173,9 @@ const EditPage = ({ data: initialData }: Props) => {
     <>
       <div className="flex w-full gap-8 overflow-hidden">
         <div
-          ref={captureRef}
           className={`h-[430px] scrollbar-hide w-1/2 overflow-y-auto rounded-${bgRadius}`}
         >
-          <ImagePreviewCard data={newData} />
+          <ImagePreviewCard data={newData} ref={captureRef} />
         </div>
 
         <div className="w-1/2">
@@ -311,7 +310,8 @@ const EditPage = ({ data: initialData }: Props) => {
                   onValueChange={handleBGBackgroundChange}
                 >
                   <SelectTrigger className="w-[180px]">
-                    { COLOR.find(obj => obj.key === bgBackground.key)?.name|| 'Select'}
+                    {COLOR.find((obj) => obj.key === bgBackground.key)?.name ||
+                      'Select'}
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>

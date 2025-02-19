@@ -17,15 +17,16 @@ import XLogo from '@/components/global/x-logo';
 
 type Props = {
   data: FileProps;
+  ref: any;
 };
 
-const ImagePreviewCard = ({ data }: Props) => {
+const ImagePreviewCard = ({ data, ref }: Props) => {
   const preferences = data?.preferences;
   const mediaCount = data?.tweetMedia?.length;
   const colorElement = data?.preferences?.bgBackground;
   const defaultColor = 'transparent';
   return (
-    <div className="w-full h-auto flex flex-col">
+    <div className="w-full h-auto flex flex-col" ref={ref}>
       <Card
         style={
           (colorElement?.color?.includes('gradient')
